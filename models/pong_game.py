@@ -1,82 +1,49 @@
 from pong_paddle import Paddle
-
+from pong_ball import Ball
 
 class Game:
     def __init__(self, boundary=10):
         """
         Inicializa o jogo.
-        :param boundary: Altura do campo de jogo.
+        :param boundary: Altura e largura do campo de jogo.
         """
         self.boundary = boundary
         self.paddle_left = Paddle(position=3, boundary=boundary)
         self.paddle_right = Paddle(position=3, boundary=boundary)
-        self.ball_position = [boundary // 2, boundary // 2]  # Meio do campo
-        self.ball_direction = [-1, 1]  # Direção da bola [vertical, horizontal]
+        self.ball = Ball(position=[boundary // 2, boundary // 2], direction=[-1, 1], boundary=boundary)
         self.score = [0, 0]  # Pontuação [esquerda, direita]
 
     def move_ball(self):
-        """Atualiza a posição da bola e verifica colisões."""
-        next_position = [
-            self.ball_position[0] + self.ball_direction[0],
-            self.ball_position[1] + self.ball_direction[1]
-        ]
-
-        # Descreve o movimento da bola
-        print(f"A bola se move de {self.ball_position} para {next_position}")
-
-        # Verifica colisão com bordas verticais
-        if next_position[0] < 0 or next_position[0] >= self.boundary:
-            self.ball_direction[0] *= -1  # Inverte a direção vertical
-            print("A bola atingiu a borda vertical e inverteu a direção.")
+        """Move a bola, verifica colisões e atualiza o placar."""
+        self.ball.move()
+        print(f"A bola está na posição {self.ball.position}")
 
         # Verifica colisão com os paddles
-        if next_position[1] == 1 and next_position[0] in self.paddle_left.get_positions():
-            self.ball_direction[1] *= -1  # Inverte direção horizontal
-            print("A bola atingiu o paddle esquerdo!")
-        elif next_position[1] == self.boundary - 2 and next_position[0] in self.paddle_right.get_positions():
-            self.ball_direction[1] *= -1  # Inverte direção horizontal
-            print("A bola atingiu o paddle direito!")
+        if self.ball.check_collision(self.paddle_left):
+            print("A bola colidiu com o paddle esquerdo!")
+        elif self.ball.check_collision(self.paddle_right):
+            print("A bola colidiu com o paddle direito!")
 
-        # Verifica pontuação
-        if next_position[1] < 0:  # Jogador da direita marca ponto
+        # Verifica colisão com as paredes
+        self.ball.check_wall_collision()
+
+        # Verifica se alguém marcou ponto
+        if self.ball.position[1] < 0:  # Jogador da direita marca ponto
             self.score[1] += 1
-            print(f"Jogador direito marca ponto! Placar: {self.score[0]} - {self.score[1]}")
-            self.reset_ball()
-        elif next_position[1] >= self.boundary:  # Jogador da esquerda marca ponto
+            print(f"Jogador direito marcou ponto! Placar: {self.score[0]} - {self.score[1]}")
+            self.ball.reset()
+        elif self.ball.position[1] >= self.boundary:  # Jogador da esquerda marca ponto
             self.score[0] += 1
-            print(f"Jogador esquerdo marca ponto! Placar: {self.score[0]} - {self.score[1]}")
-            self.reset_ball()
-        else:
-            self.ball_position = next_position
+            print(f"Jogador esquerdo marcou ponto! Placar: {self.score[0]} - {self.score[1]}")
+            self.ball.reset()
 
-    def reset_ball(self):
-        """Reinicia a posição da bola no centro e descreve."""
-        print("A bola é reiniciada no centro!")
-        self.ball_position = [self.boundary // 2, self.boundary // 2]
-        self.ball_direction = [-1, 1]  # Reinicia a direção
-
-    def render(self):
-        """Exibe o estado atual do jogo e descreve."""
-        print(f"Placar: {self.score[0]} - {self.score[1]}")
-        print("-" * self.boundary)
-
-        for i in range(self.boundary):
-            row = [' '] * self.boundary
-
-            # Descreve paddles
-            if i in self.paddle_left.get_positions():
-                row[0] = '|'
-            if i in self.paddle_right.get_positions():
-                row[-1] = '|'
-
-            # Descreve a bola
-            if i == self.ball_position[0]:
-                row[self.ball_position[1]] = 'O'
-
-            print(''.join(row))
-
-        print("-" * self.boundary)
+    def describe_game_state(self):
+        """Descreve o estado atual do jogo no terminal."""
+        print(f"Placar: Jogador Esquerdo {self.score[0]} - {self.score[1]} Jogador Direito")
+        print(f"Posição da Bola: {self.ball.position}")
+        print(f"Paddle Esquerdo: {self.paddle_left.get_positions()}")
+        print(f"Paddle Direito: {self.paddle_right.get_positions()}")
 
     def is_game_over(self):
-        """Verifica se o jogo terminou (exemplo: limite de pontos)."""
+        """Verifica se o jogo terminou."""
         return max(self.score) >= 5

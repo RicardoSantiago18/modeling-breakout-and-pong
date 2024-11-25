@@ -23,5 +23,3 @@ class Paddle:
     def get_positions(self):
         """Retorna as posições ocupadas pelo paddle."""
         return list(range(self.position, self.position + self.size))
-
-
