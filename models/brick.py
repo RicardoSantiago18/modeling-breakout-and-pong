@@ -1,9 +1,11 @@
-class Brick:
-    def __init__(self, x, y):
-        self.position_x = x
-        self.position_y = y
-        self.width = 10
-        self.height = 5
+class Bricks:
+    def __init__(self, posicao_x, posicao_y, cor, pontuacao):
+        self.posicao_x = posicao_x
+        self.posicao_y = posicao_y
+        self.cor = cor
+        self.pontuacao = pontuacao
+        self.destruido = False
 
-    def hit(self):
-        print("Brick hit!")
+    def destruir(self):
+        self.destruido = True
+        print(f"Tijolo na posição ({self.posicao_x}, {self.posicao_y}) de cor {self.cor} foi destruído!\n")

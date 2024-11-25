@@ -1,4 +1,4 @@
-from paddle import Paddle
+from pong_paddle import Paddle
 from ball import Ball
 
 class Game:

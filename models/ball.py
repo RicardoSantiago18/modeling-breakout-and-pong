@@ -1,16 +1,17 @@
 class Ball:
-    def __init__(self):
-        self.position_x = 0
-        self.position_y = 0
-        self.direction_x = 1
-        self.direction_y = 1
+    def __init__(self, posicao_x, posicao_y, velocidade):
+        self.posicao_x = posicao_x
+        self.posicao_y = posicao_y
+        self.velocidade = velocidade
 
-    def move(self):
-        self.position_x += self.direction_x
-        self.position_y += self.direction_y
+    def iniciar(self):
+        print(f"Bola iniciada na posição ({self.posicao_x}, {self.posicao_y})\n")
 
-    def check_collision(self, obj):
-        if (self.position_x == obj.position_x and
-                self.position_y == obj.position_y):
-            return True
-        return False
+    def rebater(self):
+        print("Bola rebateu!\n")
+
+    def colide_com_tijolo(self, tijolo):
+        return True
+
+    def colide_com_raquete(self, raquete):
+        return True
