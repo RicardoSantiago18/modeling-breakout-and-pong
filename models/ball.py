@@ -15,3 +15,13 @@ class Ball:
 
     def colide_com_raquete(self, raquete):
         return True
+
+    def resetar(self):
+        self.posicao_x = 2
+        self.posicao_y = 2
+        print("A bola foi resetada para a posição inicial.\n")
+
+    def perdeu_jogo(self):
+        if self.posicao_y >= 600:
+            return True
+        return False
