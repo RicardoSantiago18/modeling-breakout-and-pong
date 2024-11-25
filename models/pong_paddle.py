@@ -1,12 +1,27 @@
 class Paddle:
-    def _init_(self, position_x=0, position_y=0):
-        self.position_x = position_x
-        self.position_y = position_y
-        self.width = 2
-        self.height = 10
+    def __init__(self, position, size=3, boundary=10):
+        """
+        Inicializa um paddle.
+        :param position: Posição inicial do paddle (índice vertical).
+        :param size: Tamanho do paddle.
+        :param boundary: Limite máximo do campo.
+        """
+        self.position = position
+        self.size = size
+        self.boundary = boundary
 
     def move_up(self):
-        self.position_y -= 5
+        """Move o paddle para cima, respeitando o limite."""
+        if self.position > 0:
+            self.position -= 1
 
     def move_down(self):
-        self.position_y+=5
+        """Move o paddle para baixo, respeitando o limite."""
+        if self.position < self.boundary - self.size:
+            self.position += 1
+
+    def get_positions(self):
+        """Retorna as posições ocupadas pelo paddle."""
+        return list(range(self.position, self.position + self.size))
+
+
